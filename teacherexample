@@ -1,0 +1,89 @@
+before all the table creation query writing,etc was done by the developer. Springboot has elinimated this headach by no need to create the table, all the developer has to do is create an entity class with the table name and attributes with the column names but now its compulsory for the class to have a primary  key.thus the column that we wantto makethe  primary key allot it  with  the @id annotation.  if we  want  to have  a  different name of column in the database then we use @Column(name="nxy") annotation
+
+Annotation is used when we are  telling our compiler to do something on our behalf
+
+the way we want our id to be generated we mention it in @GeneratedValue(strategy=GenerationType.IDENTITY/auto/sequence/table)  @Id and @GeneratedValue are compulsory.
+
+if we wan to store any record it must have an equivalent object of that
+JPA(java persistence api) helps in converting object to table mapping(mtlb jesehi initializeor declarekrungi jpa usko databse maistore krenga
+thus our main job isto create an object andpass it to the .save()method it will insert it for us, thus there's no need of writing insert query.
+creating objectin the controller class
+
+public void addTeacher(@RequestParam("p1") String tname,
+						   @RequestParam("p2") int tage,
+						   @RequestParam("p3") double sal) {
+		Teacher t1=new Teacher();
+		t1.setTname(tname);
+		t1.setTage(tage);
+		t1.setSal(sal);
+		
+	}
+
+the various ways throung which attributes passes from fronted to backend are-->
+1.@RequestParam-->individual param
+whatever given in double quotes(nameof parameter) same should be passed in the url, there's no need to match the name of parameters
+use (@RequestParam("n1") int n1,@RequestParam("n2") int n2)
+http://localhost:8080/wadiacollege/additionnew?n1=110&n2=100
+					      url ends at ? and then the parameters are given & is the separator	
+					      
+2.one Json object -->at times frontend sends data as json object and will say work withthat object only(request body)@RequestBody
+3.Path variables-->we can pass data as a part of url in curly braces and match it with @PathVarible
+@PostMapping("/addTeacherByPathVariable/{t1}/{t2}/{t3}")
+	public Teacher addTeacherByPathVariable(@PathVariable("t1") String tname, @PathVariable("t2") int tage,
+			@PathVariable("t3") double sal) {
+		Teacher t1 = new Teacher();
+		t1.setTname(tname);
+		t1.setTage(tage);
+		t1.setSal(sal);
+		return teacherService.addTeacher(t1);
+	}
+
+http://localhost:8080/wadiacollege/addTeacherByPathVariable/Jack/57/9800
+
+but for only one  parameter-->
+@PostMapping("/addTeacherBySinglePathVariable/{t1}")
+	public Teacher addTeacherBySinglePathVariable(@PathVariable("t1") String tname) {
+		Teacher t1 = new Teacher();
+		t1.setTname(tname);
+		t1.setTage(61);
+		t1.setSal(12000);
+		return teacherService.addTeacher(t1);
+	}
+
+
+
+go to serviepackage create class
+go to repository and make an interface and exdends it to JpaRepository
+for each entity class create a separate repository<Teacher, Integer>
+								wrapper class of primary key ofteacher class
+
+LifeCycle ->
+
+if the controller wants to communicate with service it should have a servicepackage object in it and so on to access other packages function it must have its objectcreated  so as we areusing springboot wejust have to autowire it-->i want thatobject from ioc container
+@Autowired
+	TeacherService teacherService;
+in the controller class
+now contoller will pass the object to the service 
+@Autowired
+	TeacherService teacherService;
+in repository class
+
+
+
+
+// we'll take these 3 parameters and create a object of it, controllersjob is accept parameters and create anobject once the object is populated pass that object to the service class, we have
+// autowired the service class object above using that object service class method addteacher is called and object t1 is passed overhere
+
+//once everything is successfull thereord will return this
+//After controller here we are passing t1 to the repository,the repository has many methods of sql forinserting ithas save method
+//here jpais used i will pass the object it will create a recorsd in the database 
+
+
+only get request works withplain brower if we are  using any other request we need to open postman hit the api and check if its successful once we get the response our task is done
+
+
+postman-->
+install postman -->signup-->new collection-->http-->post-->insert baseurl and endpoint--> insert attribute name and valur-->subbmit
+
+apidog-->
+install apidog for windows-->extract in afolder-->install setup-->sign up-->in workspace create a new project-->getinside the project-->createnew new endpoint->mention method type-->enterurl-->save -->run-->send
