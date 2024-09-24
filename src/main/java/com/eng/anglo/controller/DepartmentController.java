@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.eng.anglo.entity.Department;
 import com.eng.anglo.service.DepartmentService;
-
+//Author Zainab Kazi
 @RestController
 @RequestMapping("/wadiacollege")
 public class DepartmentController {
